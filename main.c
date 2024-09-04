@@ -69,13 +69,13 @@ void RedActive(void)
 // Function to activate the yellow light and start a 3-second countdown
 void YellowActive(void)
 {
-	CountDown(0, 3, YELLOW); // Call CountDown with 3 seconds and YELLOW light
+    CountDown(0, 3, YELLOW); // Call CountDown with 3 seconds and YELLOW light
 }
 
 // Function to activate the green light and start a 10-second countdown
 void GreenActive(void)
 {
-	CountDown(1, 0, GREEN); // Call CountDown with 10 seconds and GREEN light
+    CountDown(1, 0, GREEN); // Call CountDown with 10 seconds and GREEN light
 }
 
 // Function to handle the countdown logic
@@ -111,9 +111,15 @@ void CountDown(s8 Tens, s8 Ones, s8 LED)
         }
 
         _delay_ms(DELAY_MS); // Delay for 1 second
-
-        PORTC = ~SSDArr[Tens]; // Refresh the Tens digit display
-        Ones--;                // Decrement the Ones digit
+        if (PORTB == 2)
+        {
+            PORTA = 0xFF;  // Flash Ones digit on first 7-segment
+            PORTC = 0xFF;  // flash Tens digit on second 7-segment
+            PORTB = 0;     // Turn on YELLOW light
+            _delay_ms(70); // Delay for 0.2 second
+            PORTB = 2;     // Turn off YELLOW light
+        }
+        Ones--; // Decrement the Ones digit
 
         // Turn off the LED when countdown reaches 00
         if ((Ones == 0) && (Tens == 0))
